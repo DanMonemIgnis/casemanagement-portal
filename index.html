@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ignis Care — Referral Portal</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f7f5f2; color: #1a1a1a; line-height: 1.6; }
+  a { color: #6B2737; }
+  .site-header { background: #fff; border-bottom: 0.5px solid #e0ddd8; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 64px; position: sticky; top: 0; z-index: 100; }
+  .site-header img { height: 38px; width: auto; }
+  .header-nav { display: flex; gap: 1.5rem; }
+  .header-nav a { font-size: 13px; font-weight: 500; color: #6B2737; text-decoration: none; cursor: pointer; }
+  .header-nav a:hover { text-decoration: underline; }
+  .hero { background: #fff; border-bottom: 0.5px solid #e0ddd8; padding: 3rem 2rem; }
+  .hero-inner { max-width: 720px; margin: 0 auto; border-left: 3px solid #6B2737; padding-left: 1.5rem; }
+  .hero-inner h1 { font-size: 26px; font-weight: 500; line-height: 1.35; margin-bottom: 1rem; color: #1a1a1a; }
+  .hero-inner p { font-size: 16px; color: #555; line-height: 1.8; margin-bottom: 0.75rem; }
+  .hero-inner p:last-child { margin-bottom: 0; }
+  .main { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem; }
+  .card { background: #fff; border: 0.5px solid #e0ddd8; border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+  .card-title { font-size: 11px; font-weight: 500; color: #999; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 1rem; }
+  .support-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
+  .support-pill { background: #f7f5f2; border-radius: 8px; padding: 10px 12px; font-size: 13px; color: #1a1a1a; display: flex; align-items: center; gap: 8px; }
+  .pill-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .how-row { display: flex; gap: 14px; align-items: flex-start; padding: 14px 0; border-bottom: 0.5px solid #e0ddd8; }
+  .how-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .how-row:first-child { padding-top: 0; }
+  .how-icon { width: 34px; height: 34px; border-radius: 8px; background: #EEEDFE; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .how-text p { font-size: 14px; font-weight: 500; color: #1a1a1a; margin-bottom: 3px; }
+  .how-text span { font-size: 13px; color: #666; line-height: 1.65; }
+  .step-row { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px; }
+  .step-row:last-child { margin-bottom: 0; }
+  .step-num { min-width: 26px; height: 26px; border-radius: 50%; background: #EEEDFE; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; color: #3C3489; flex-shrink: 0; }
+  .step-text p { font-size: 14px; font-weight: 500; color: #1a1a1a; margin-bottom: 2px; }
+  .step-text span { font-size: 13px; color: #666; line-height: 1.65; }
+  .tab-row { display: flex; gap: 6px; margin-bottom: 1rem; flex-wrap: wrap; }
+  .tab { padding: 7px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; cursor: pointer; border: 0.5px solid #ccc; background: #fff; color: #666; }
+  .tab:hover { border-color: #6B2737; color: #6B2737; }
+  .tab.active { background: #6B2737; color: #fff; border-color: #6B2737; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+  .doc-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 0.5px solid #e0ddd8; gap: 12px; }
+  .doc-row:last-child { border-bottom: none; }
+  .doc-left p { font-size: 14px; font-weight: 500; color: #1a1a1a; margin-bottom: 2px; }
+  .doc-left span { font-size: 12px; color: #888; }
+  .doc-btn { font-size: 12px; font-weight: 500; color: #6B2737; background: none; border: 0.5px solid #6B2737; border-radius: 4px; padding: 5px 12px; cursor: pointer; white-space: nowrap; text-decoration: none; display: inline-block; }
+  .doc-btn:hover { background: #6B2737; color: #fff; }
+  .faq-item { border-bottom: 0.5px solid #e0ddd8; }
+  .faq-item:last-of-type { border-bottom: none; }
+  .faq-q { display: flex; justify-content: space-between; align-items: center; padding: 13px 0; cursor: pointer; font-size: 14px; font-weight: 500; color: #1a1a1a; gap: 12px; }
+  .faq-q:hover { color: #6B2737; }
+  .faq-a { font-size: 13px; color: #555; line-height: 1.75; padding-bottom: 13px; display: none; }
+  .faq-a.open { display: block; }
+  .chevron { font-size: 11px; color: #aaa; flex-shrink: 0; transition: transform 0.2s; }
+  .chevron.open { transform: rotate(180deg); }
+  .policy-row { display: flex; justify-content: space-between; align-items: center; padding: 11px 0; border-bottom: 0.5px solid #e0ddd8; font-size: 14px; color: #1a1a1a; }
+  .policy-row:last-child { border-bottom: none; }
+  .tick { width: 20px; height: 20px; border-radius: 50%; background: #EAF3DE; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .cqc-bar { display: flex; align-items: center; gap: 10px; background: #EAF3DE; border-radius: 8px; padding: 12px 14px; margin-bottom: 1rem; }
+  .cqc-bar span { font-size: 13px; font-weight: 500; color: #27500A; }
+  .oc-bar { display: flex; align-items: center; gap: 12px; background: #EEEDFE; border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; }
+  .oc-bar span { font-size: 13px; font-weight: 500; color: #3C3489; }
+  .team-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .tc { background: #f7f5f2; border-radius: 8px; padding: 1rem; }
+  .av { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 500; font-size: 13px; margin-bottom: 8px; }
+  .badge { display: inline-block; font-size: 11px; padding: 3px 8px; border-radius: 4px; font-weight: 500; margin-top: 3px; margin-right: 3px; }
+  .site-footer { border-top: 0.5px solid #e0ddd8; background: #fff; padding: 2rem; text-align: center; font-size: 13px; color: #888; margin-top: 2rem; }
+  .site-footer strong { color: #1a1a1a; font-weight: 500; }
+  @media (max-width: 540px) {
+    .hero { padding: 2rem 1rem; }
+    .main { padding: 1rem; }
+    .team-grid, .support-grid { grid-template-columns: 1fr; }
+    .header-nav { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <img src="logo_dark.png" alt="Ignis Care">
+  <nav class="header-nav">
+    <a onclick="document.getElementById('offer').scrollIntoView({behavior:'smooth'})">What we offer</a>
+    <a onclick="document.getElementById('governance').scrollIntoView({behavior:'smooth'})">Governance</a>
+    <a onclick="document.getElementById('team').scrollIntoView({behavior:'smooth'})">Our team</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <h1>Adding clinical depth to the people you support.</h1>
+    <p>Some people need more than one service can offer alone — whether they are in settled placements ready for therapeutic progress, navigating complex transitions, or living with needs that cross multiple disciplines.</p>
+    <p>Ignis Care is a CQC-registered, nurse-led provider built to work alongside you — adding clinical capacity, holding responsibility cleanly, and making your MDT stronger, not more complicated.</p>
+  </div>
+</section>
+
+<main class="main">
+
+  <div class="card">
+    <div class="card-title">Who we support</div>
+    <p style="font-size:13px;color:#666;line-height:1.65;">All ages. All presentations. We do not apply narrow eligibility criteria.</p>
+    <div class="support-grid">
+      <div class="support-pill"><div class="pill-dot" style="background:#534AB7;"></div>Children (0–18 years)</div>
+      <div class="support-pill"><div class="pill-dot" style="background:#534AB7;"></div>Adults under 65</div>
+      <div class="support-pill"><div class="pill-dot" style="background:#534AB7;"></div>Adults over 65</div>
+      <div class="support-pill"><div class="pill-dot" style="background:#534AB7;"></div>Dementia</div>
+      <div class="support-pill"><div class="pill-dot" style="background:#1D9E75;"></div>Mental health conditions</div>
+      <div class="support-pill"><div class="pill-dot" style="background:#1D9E75;"></div>Learning disabilities</div>
+      <div class="support-pill"><div class="pill-dot" style="background:#1D9E75;"></div>Sensory impairments</div>
+      <div class="support-pill"><div class="pill-dot" style="background:#1D9E75;"></div>Physical disabilities</div>
+    </div>
+  </div>
+
+  <div class="card" id="offer">
+    <div class="card-title">What Ignis brings to your MDT</div>
+    <div class="how-row">
+      <div class="how-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#534AB7" stroke-width="1.2"/><path d="M8 5v3l2 2" stroke="#534AB7" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+      <div class="how-text"><p>Nurse-led clinical oversight</p><span>Our Registered Manager, Miriam Chengeto Cummings, is a Band 7 RMN and MCA Lead. She attends MDTs, contributes clinical reasoning, and leads on behavioural and therapeutic intervention — bringing clinical accountability most providers cannot offer.</span></div>
+    </div>
+    <div class="how-row">
+      <div class="how-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2.5" stroke="#534AB7" stroke-width="1.2"/><path d="M5 8h6M8 5v6" stroke="#534AB7" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+      <div class="how-text"><p>Therapeutically informed personal care</p><span>For people in settled placements ready to make progress, we deliver personal care that builds on stability — using it as a foundation for meaningful therapeutic outcomes, not simply maintaining the status quo.</span></div>
+    </div>
+    <div class="how-row">
+      <div class="how-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 13V7l5-4 5 4v6" stroke="#534AB7" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><rect x="6" y="9" width="4" height="4" rx="1" stroke="#534AB7" stroke-width="1.2"/></svg></div>
+      <div class="how-text"><p>Transition support that holds</p><span>Child to adult. Hospital to community. We plan continuity from day one so the person does not lose ground at handover — the moment most care packages are at their most vulnerable.</span></div>
+    </div>
+    <div class="how-row">
+      <div class="how-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 11l4-4 3 3 5-6" stroke="#534AB7" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="how-text"><p>We hold our piece — you do not manage us</p><span>Clear reporting lines. Proactive updates at agreed intervals. No chasing required. We integrate into your existing structure, take full ownership of our role, and give you back time.</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">How a referral works</div>
+    <div class="step-row"><div class="step-num">1</div><div class="step-text"><p>You make contact</p><span>A conversation first, no forms required. We take the time to understand the person and what you need from us.</span></div></div>
+    <div class="step-row"><div class="step-num">2</div><div class="step-text"><p>Named contact confirmed within 24 hours</p><span>You will know exactly who at Ignis holds this. Not a duty inbox — a person, with a direct line.</span></div></div>
+    <div class="step-row"><div class="step-num">3</div><div class="step-text"><p>Clinical assessment within 5 working days</p><span>Led by Miriam. Thorough, shareable with your team, and built to sit alongside your existing records.</span></div></div>
+    <div class="step-row"><div class="step-num">4</div><div class="step-text"><p>We agree our role in the MDT before starting</p><span>Attendance, reporting cadence, escalation contacts — all confirmed with you before we begin.</span></div></div>
+    <div class="step-row"><div class="step-num">5</div><div class="step-text"><p>Regular updates without being asked</p><span>Progress, risk flags, clinical notes — shared proactively at the frequency you need.</span></div></div>
+  </div>
+
+  <div class="card" id="governance">
+    <div class="card-title">Governance, policies and documentation</div>
+    <p style="font-size:13px;color:#666;line-height:1.65;margin-bottom:1rem;">Everything a case manager, financial deputy, Court of Protection representative, or CQC inspector may need — available before you ask for it.</p>
+    <div class="tab-row">
+      <div class="tab active" onclick="switchTab(event,'safeguarding')">Safeguarding</div>
+      <div class="tab" onclick="switchTab(event,'risk')">Risk and PBS</div>
+      <div class="tab" onclick="switchTab(event,'mca')">MCA and DoLS</div>
+      <div class="tab" onclick="switchTab(event,'staffing')">Staffing</div>
+      <div class="tab" onclick="switchTab(event,'cop')">CoP and financial</div>
+      <div class="tab" onclick="switchTab(event,'complaints')">Complaints</div>
+      <div class="tab" onclick="switchTab(event,'all')">All policies</div>
+    </div>
+
+    <div class="panel active" id="panel-safeguarding">
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What is Ignis's safeguarding escalation pathway?<span class="chevron">&#9660;</span></div><div class="faq-a">Any safeguarding concern is escalated immediately to our Designated Safeguarding Lead, Daniel Monem. We follow local authority thresholds and make referrals to the relevant MASH or statutory team within required timeframes. All incidents are logged in real time on PASS, reviewed, and reported in line with our QCS safeguarding policy. Patterns and trends are RAG-rated and fed into monthly clinical governance review.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Who is the Designated Safeguarding Lead?<span class="chevron">&#9660;</span></div><div class="faq-a">Daniel Monem, Nominated Individual and Director. Daniel holds a Level 5 Designated Safeguarding Lead qualification and Safeguarding Children and Adults Level 2 and 3 certificates (Reed). Directly contactable on 07494 696 305. Miriam Chengeto Cummings (Registered Manager, Band 7 RMN) is also DSL qualified and provides clinical safeguarding oversight day-to-day.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How does Ignis handle a concern involving a third party?<span class="chevron">&#9660;</span></div><div class="faq-a">We follow local multi-agency safeguarding procedures, notify the relevant statutory body, and maintain detailed records of all actions taken and decisions made. We do not investigate concerns ourselves — we refer, record, and cooperate fully with any statutory investigation. All actions are documented within PASS with a full audit trail.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What if there is a concern about Ignis itself?<span class="chevron">&#9660;</span></div><div class="faq-a">Any concern about Ignis — from a professional, family member, or the person we support — can be raised directly with Daniel Monem on 07494 696 305. All concerns are acknowledged within 24–48 hours, logged, investigated independently of the subject, and responded to with clear outcomes. Where appropriate, we actively support escalation to the Local Authority, CQC, or the Local Government and Social Care Ombudsman.</div></div>
+      <div class="doc-row" style="margin-top:10px;"><div class="doc-left"><p>Safeguarding Adults policy</p><span>QCS — reviewed annually</span></div><a class="doc-btn" href="CR74-Safeguarding%20Adults%20Policy%20and%20Procedure%20(2).pdf" target="_blank">View PDF</a></div>
+    </div>
+
+    <div class="panel" id="panel-risk">
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How does Ignis approach risk?<span class="chevron">&#9660;</span></div><div class="faq-a">We use a positive risk management framework — recognising that managed risk supports autonomy, dignity, and therapeutic progress. All risk assessments are person-centred, reviewed regularly, and shared with the MDT. We do not restrict as a default; we plan, record, and review. All risk decisions are RAG-rated, with red-rated decisions triggering immediate clinical review led by Miriam.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What is a PBS plan and does Ignis use them?<span class="chevron">&#9660;</span></div><div class="faq-a">Yes. Where behaviours of concern are present, Ignis develops a Positive Behaviour Support plan in collaboration with the person, their family, and the wider MDT. Led by Miriam as our clinical lead, PBS plans are evidence-based, comply with NICE guidance NG11, and are reviewed at each clinical governance cycle. Behaviour is always understood functionally before any restriction is considered.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How are restrictive practices governed?<span class="chevron">&#9660;</span></div><div class="faq-a">Any restrictive practice requires documented justification, MDT agreement, and — where relevant — authorisation under the Mental Capacity Act or Deprivation of Liberty Safeguards. All restrictions are logged in PASS, linked directly to the relevant MCA decision, reviewed at every care review, and actively reduced over time. Restraint usage is reviewed at director level monthly.</div></div>
+      <div class="doc-row" style="margin-top:10px;"><div class="doc-left"><p>Positive Behaviour Support policy</p><span>QCS — reviewed annually</span></div><a class="doc-btn" href="CC141-Positive%20Behaviour%20Support%20including%20Challenging%20Behaviour%20Policy%20and%20Procedure%20(1).pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>Restrictive practices and physical interventions policy</p><span>QCS — reviewed annually</span></div><a class="doc-btn" href="CR77-Restrictive%20Practices%20Including%20Restraint%20and%20Physical%20Interventions%20Policy%20and%20Procedure%20(2).pdf" target="_blank">View PDF</a></div>
+    </div>
+
+    <div class="panel" id="panel-mca">
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Who holds the MCA lead at Ignis?<span class="chevron">&#9660;</span></div><div class="faq-a">Mrs Miriam Chengeto Cummings, Registered Manager and Band 7 RMN, is the designated MCA Lead. She holds accountability for the quality, defensibility, and oversight of all capacity and best interests decisions across every package.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How does Ignis make and record best interests decisions?<span class="chevron">&#9660;</span></div><div class="faq-a">Capacity is assessed decision-specifically in line with the Mental Capacity Act 2005. Where capacity is lacking, a formal Best Interests process is triggered — involving MDT input, family or advocates where appropriate, and full consideration of the person's past and present wishes, beliefs, and values. All Best Interests meeting minutes are documented in PASS and every decision is logged on our internal MCA Tracker with rationale, MDT involvement, and review dates.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How does Ignis handle Deprivation of Liberty?<span class="chevron">&#9660;</span></div><div class="faq-a">Where a DoLS authorisation is in place, Ignis works within its conditions and records compliance. Where we identify a potential deprivation not yet authorised, we notify the relevant supervisory body and the person's legal representative immediately. All DoLS decisions are logged and linked to the MCA governance framework.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How are MCA decisions monitored over time?<span class="chevron">&#9660;</span></div><div class="faq-a">All decisions are RAG-rated. Red-rated decisions trigger immediate review. Amber decisions are subject to scheduled MDT oversight. Green decisions follow routine review cycles. Weekly governance review led by Miriam cross-references MCA decisions, incidents, restraint usage, and safeguarding triggers to ensure nothing drifts without scrutiny.</div></div>
+      <div class="doc-row" style="margin-top:10px;"><div class="doc-left"><p>Mental Capacity Act (MCA) 2005 policy</p><span>QCS — reviewed annually</span></div><a class="doc-btn" href="CR88-Mental%20Capacity%20Act%20(MCA)%202005%20Policy%20and%20Procedure.pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>Deprivation of Liberty in community settings policy</p><span>QCS — reviewed annually</span></div><a class="doc-btn" href="CR83-Deprivation%20of%20Liberty%20in%20Community%20Settings%20Policy%20and%20Procedure.pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>Consent to care, support and treatment policy</p><span>QCS — reviewed annually</span></div><a class="doc-btn" href="CR22-Consent%20to%20Care%2C%20Support%20and%20Treatment%20Policy%20and%20Procedure%20(1).pdf" target="_blank">View PDF</a></div>
+    </div>
+
+    <div class="panel" id="panel-staffing">
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What happens if the assigned worker is off sick?<span class="chevron">&#9660;</span></div><div class="faq-a">Ignis does not operate a stranger model. Every service user has a core team and a pre-introduced secondary bank team — staff who have shadowed the package, read the care plan, risk profile, PBS strategy, and daily routines before working independently. In the event of sickness, cover is drawn from this known secondary team first. Emergency cover comes from Ignis's pre-vetted complex care database — not open-market agency.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Are staff directly employed or agency?<span class="chevron">&#9660;</span></div><div class="faq-a">Primary delivery is through Ignis's own controlled workforce. Agency use is governed by a formal policy (PC21) — it requires RM authorisation, draws only from an approved agency list, and is used in exceptional circumstances only. All staff, regardless of source, go through Ignis vetting, compliance checks, clinical briefing, and are onboarded to our governance framework and PASS system before working with any service user.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What are the staffing ratios?<span class="chevron">&#9660;</span></div><div class="faq-a">Ratios are needs-led and clinically justified, not generic. Typically 1:1 for baseline support, 2:1 or 3:1 for high-risk, behavioural, or complex clinical presentations. Ratios are defined in the care and risk management plan, justified through functional behaviour assessment and MDT input, and reviewed via RAG governance and incident data.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How is recruitment governed?<span class="chevron">&#9660;</span></div><div class="faq-a">All recruitment follows a structured, values-based process aligned to CQC Regulation 19 (Fit and Proper Persons). This includes full DBS check, minimum two references, right to work verification, qualifications check, and structured interview by a minimum of two assessors. No staff member starts before all compliance checks are complete.</div></div>
+      <div class="doc-row" style="margin-top:10px;"><div class="doc-left"><p>Agency staff policy (PC21)</p><span>QCS — reviewed annually</span></div><a class="doc-btn" href="PC21-Agency%20Staff%20Policy%20and%20Procedure.pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>Lone working policy (PM22)</p><span>QCS — reviewed annually</span></div><a class="doc-btn" href="PM22-Lone%20Working%20Policy%20and%20Procedure%20(1).pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>Recruitment policy (PR26)</p><span>QCS — reviewed annually</span></div><a class="doc-btn" href="PR26-Recruitment%20Policy%20and%20Procedure.pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>Recruitment policy (PR36)</p><span>QCS — reviewed annually</span></div><a class="doc-btn" href="PR36-Recruitment%20Policy%20and%20Procedure.pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>Fit and proper person — directors policy (AR41)</p><span>QCS — reviewed annually</span></div><a class="doc-btn" href="AR41-Fit%20and%20Proper%20Person%20-%20Directors%20(CQC)%20Policy%20and%20Procedure.pdf" target="_blank">View PDF</a></div>
+    </div>
+
+    <div class="panel" id="panel-cop">
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How does Ignis work with financial deputies?<span class="chevron">&#9660;</span></div><div class="faq-a">We provide full transparency on all costs, services delivered, and any proposed changes to a care package. Financial deputies receive itemised reporting at the agreed frequency and are included in any care review that may affect funding. We hold no funds on behalf of service users. Our fee structure carries no hidden uplifts or retrospective charges.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is Ignis prepared for Court of Protection cases?<span class="chevron">&#9660;</span></div><div class="faq-a">Yes. We maintain detailed, dated, and auditable records of all care decisions, capacity assessments, best interests decisions, and MDT communications — all held within PASS and available to legal representatives through appropriate channels. Our MCA Tracker, RAG governance system, and incident logs create a complete, defensible record of every significant decision made in relation to a service user.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What funding routes does Ignis work with?<span class="chevron">&#9660;</span></div><div class="faq-a">Ignis currently works primarily with case manager-led packages including Court of Protection and private case management. We are expanding to local authority commissioned packages, NHS Continuing Healthcare, direct payments, and private self-funders. All fee structures are transparent and built to align with framework rates where required, with clinical justification provided for enhanced packages.</div></div>
+      <div class="doc-row" style="margin-top:10px;"><div class="doc-left"><p>Service users finances policy (AF09)</p><span>QCS — reviewed annually</span></div><a class="doc-btn" href="AF09-Service%20Users%20Finances%20Policy%20and%20Procedure.pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>Person-centred care and support planning policy (CP39)</p><span>QCS — reviewed annually</span></div><a class="doc-btn" href="CP39-Person-Centred%20Care%20and%20Support%20Planning%20Policy%20and%20Procedure.pdf" target="_blank">View PDF</a></div>
+    </div>
+
+    <div class="panel" id="panel-complaints">
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What is the complaints process?<span class="chevron">&#9660;</span></div><div class="faq-a">Any complaint — verbal or written — is directed to Daniel Monem, Nominated Individual, on 07494 696 305. All complaints are acknowledged within 2 working days and receive a full written response within 20 working days. Every complaint is logged, investigated independently of the subject, reviewed at director level, and responded to with clear outcomes. Where a complaint involves a safeguarding concern, both processes run in parallel.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How does Ignis respond if legal action is raised?<span class="chevron">&#9660;</span></div><div class="faq-a">We maintain comprehensive, contemporaneous records of all care delivered, decisions made, and incidents reported. In the event of a legal claim, all records are preserved and made available through proper legal channels. Ignis holds full public liability and professional indemnity insurance. Our PASS system, MCA Tracker, incident logs, and RAG governance system are specifically designed to produce a defensible audit trail.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What happens if Ignis needs to end a package?<span class="chevron">&#9660;</span></div><div class="faq-a">Termination is a last resort. Before any notice is served, Ignis must first exhaust all alternatives — care plan review, MDT input, PBS strategies, and where relevant, fee discussions. All stakeholders are engaged: the service user, family, advocates, commissioners, and housing providers. A minimum of 28 days' written notice is given. Care continues throughout the notice period and Ignis actively supports transition to a new provider with no gap in provision.</div></div>
+      <div class="doc-row" style="margin-top:10px;"><div class="doc-left"><p>Complaints, suggestions and compliments policy (QQ03)</p><span>QCS — reviewed annually</span></div><a class="doc-btn" href="QQ03-Complaints%2C%20Suggestions%20and%20Compliments%20Policy%20and%20Procedure%20(3).pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>Duty of Candour policy (AR38)</p><span>QCS — reviewed annually</span></div><a class="doc-btn" href="AR38-Duty%20of%20Candour%20Policy%20and%20Procedure%20(1).pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>Termination of service contract policy (AR58)</p><span>QCS — reviewed annually</span></div><a class="doc-btn" href="AR58-Termination%20of%20Service%20Users%20Service%20Contract%20Policy%20and%20Procedure.pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>Notice periods policy (PC10)</p><span>QCS — reviewed annually</span></div><a class="doc-btn" href="PC10%20-Notice%20Periods%20Policy%20and%20Procedure.pdf" target="_blank">View PDF</a></div>
+    </div>
+
+    <div class="panel" id="panel-all">
+      <div class="doc-row"><div class="doc-left"><p>Safeguarding Adults policy (CR74)</p><span>QCS</span></div><a class="doc-btn" href="CR74-Safeguarding%20Adults%20Policy%20and%20Procedure%20(2).pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>Positive Behaviour Support policy (CC141)</p><span>QCS</span></div><a class="doc-btn" href="CC141-Positive%20Behaviour%20Support%20including%20Challenging%20Behaviour%20Policy%20and%20Procedure%20(1).pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>Restrictive practices policy (CR77)</p><span>QCS</span></div><a class="doc-btn" href="CR77-Restrictive%20Practices%20Including%20Restraint%20and%20Physical%20Interventions%20Policy%20and%20Procedure%20(2).pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>Mental Capacity Act policy (CR88)</p><span>QCS</span></div><a class="doc-btn" href="CR88-Mental%20Capacity%20Act%20(MCA)%202005%20Policy%20and%20Procedure.pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>Deprivation of Liberty policy (CR83)</p><span>QCS</span></div><a class="doc-btn" href="CR83-Deprivation%20of%20Liberty%20in%20Community%20Settings%20Policy%20and%20Procedure.pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>Consent to care policy (CR22)</p><span>QCS</span></div><a class="doc-btn" href="CR22-Consent%20to%20Care%2C%20Support%20and%20Treatment%20Policy%20and%20Procedure%20(1).pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>Agency staff policy (PC21)</p><span>QCS</span></div><a class="doc-btn" href="PC21-Agency%20Staff%20Policy%20and%20Procedure.pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>Recruitment policy (PR26)</p><span>QCS</span></div><a class="doc-btn" href="PR26-Recruitment%20Policy%20and%20Procedure.pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>Recruitment policy (PR36)</p><span>QCS</span></div><a class="doc-btn" href="PR36-Recruitment%20Policy%20and%20Procedure.pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>Fit and proper person — directors (AR41)</p><span>QCS</span></div><a class="doc-btn" href="AR41-Fit%20and%20Proper%20Person%20-%20Directors%20(CQC)%20Policy%20and%20Procedure.pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>Complaints policy (QQ03)</p><span>QCS</span></div><a class="doc-btn" href="QQ03-Complaints%2C%20Suggestions%20and%20Compliments%20Policy%20and%20Procedure%20(3).pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>Duty of Candour (AR38)</p><span>QCS</span></div><a class="doc-btn" href="AR38-Duty%20of%20Candour%20Policy%20and%20Procedure%20(1).pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>Termination of service contract (AR58)</p><span>QCS</span></div><a class="doc-btn" href="AR58-Termination%20of%20Service%20Users%20Service%20Contract%20Policy%20and%20Procedure.pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>Notice periods policy (PC10)</p><span>QCS</span></div><a class="doc-btn" href="PC10%20-Notice%20Periods%20Policy%20and%20Procedure.pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>Service users finances (AF09)</p><span>QCS</span></div><a class="doc-btn" href="AF09-Service%20Users%20Finances%20Policy%20and%20Procedure.pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>Person-centred care and support planning (CP39)</p><span>QCS</span></div><a class="doc-btn" href="CP39-Person-Centred%20Care%20and%20Support%20Planning%20Policy%20and%20Procedure.pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>GDPR policy (GDPR01)</p><span>QCS</span></div><a class="doc-btn" href="GDPR01-Overarching%20UK%20GDPR%20Policy%20and%20Procedure.pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>Acquired Brain Injury policy (CC197)</p><span>QCS</span></div><a class="doc-btn" href="CC197-Acquired%20Brain%20Injury%20Policy%20and%20Procedure.pdf" target="_blank">View PDF</a></div>
+      <div class="doc-row"><div class="doc-left"><p>Lone working policy (PM22)</p><span>QCS</span></div><a class="doc-btn" href="PM22-Lone%20Working%20Policy%20and%20Procedure%20(1).pdf" target="_blank">View PDF</a></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">CQC registration and inspection readiness</div>
+    <div class="cqc-bar"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><polyline points="2,8 6,12 14,4" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>CQC registered — 24 February 2025</span></div>
+    <p style="font-size:13px;color:#666;line-height:1.7;margin-bottom:1rem;">Ignis has not yet received its first CQC inspection. Rather than waiting for inspection to set our standards, we have built our governance systems against CQC Key Lines of Enquiry from day one — Safe, Effective, Caring, Responsive, and Well-led. Our PASS system, RAG governance, monthly clinical audits, quarterly operational audits, and director-level oversight are not a response to scrutiny. They are the standard we hold ourselves to regardless of it.</p>
+    <div class="policy-row"><span>Nominated Individual: Daniel Monem (Level 5 DSL)</span><div class="tick"><svg width="10" height="10" viewBox="0 0 10 10"><polyline points="2,5 4,7 8,3" fill="none" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round"/></svg></div></div>
+    <div class="policy-row"><span>Registered Manager: Miriam Chengeto Cummings, Band 7 RMN</span><div class="tick"><svg width="10" height="10" viewBox="0 0 10 10"><polyline points="2,5 4,7 8,3" fill="none" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round"/></svg></div></div>
+    <div class="policy-row"><span>Monthly clinical audits · Quarterly operational audits</span><div class="tick"><svg width="10" height="10" viewBox="0 0 10 10"><polyline points="2,5 4,7 8,3" fill="none" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round"/></svg></div></div>
+    <div class="policy-row"><span>All staff Enhanced DBS checked before engagement</span><div class="tick"><svg width="10" height="10" viewBox="0 0 10 10"><polyline points="2,5 4,7 8,3" fill="none" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round"/></svg></div></div>
+    <div class="policy-row"><span>Policies supplied and maintained via QCS</span><div class="tick"><svg width="10" height="10" viewBox="0 0 10 10"><polyline points="2,5 4,7 8,3" fill="none" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round"/></svg></div></div>
+    <div class="policy-row"><span>Public liability and professional indemnity insurance held</span><div class="tick"><svg width="10" height="10" viewBox="0 0 10 10"><polyline points="2,5 4,7 8,3" fill="none" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round"/></svg></div></div>
+    <div class="policy-row"><span>GDPR compliant — data shared on need-to-know basis only</span><div class="tick"><svg width="10" height="10" viewBox="0 0 10 10"><polyline points="2,5 4,7 8,3" fill="none" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round"/></svg></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Out-of-hours and emergency contact</div>
+    <div class="oc-bar">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 10.5c-1 0-2-.2-2.8-.5a1 1 0 00-1 .2l-1.5 1.5A9.5 9.5 0 014.3 7.3l1.5-1.5a1 1 0 00.2-1C5.7 4 5.5 3 5.5 2a1 1 0 00-1-1H3a1 1 0 00-1 1c0 6.1 4.9 11 11 11a1 1 0 001-1v-1.5a1 1 0 00-1-1z" stroke="#534AB7" stroke-width="1.2" stroke-linecap="round"/></svg>
+      <span>On-call: 07494 696 305 — Daniel and Miriam, shared rota</span>
+    </div>
+    <p style="font-size:13px;color:#666;line-height:1.7;">There is always a senior decision-maker available outside business hours. Where there is immediate risk to life, emergency services are contacted first — then the on-call lead, who responds within 15–30 minutes for urgent calls. All out-of-hours incidents are logged on PASS, reviewed the next working day, and escalated through the governance system where required.</p>
+  </div>
+
+  <div class="card" style="background:#f7f5f2;border:none;" id="team">
+    <div class="card-title">The people accountable for your case</div>
+    <div class="team-grid">
+      <div class="tc">
+        <div class="av" style="background:#E1F5EE;color:#085041;">DM</div>
+        <p style="font-size:13px;font-weight:500;color:#1a1a1a;margin-bottom:2px;">Daniel Monem</p>
+        <p style="font-size:12px;color:#666;margin-bottom:6px;line-height:1.4;">Nominated Individual · Director</p>
+        <span class="badge" style="background:#EAF3DE;color:#3B6D11;">Level 5 DSL</span>
+        <span class="badge" style="background:#E1F5EE;color:#085041;">CQC Registered NI</span>
+      </div>
+      <div class="tc">
+        <div class="av" style="background:#EEEDFE;color:#3C3489;">MC</div>
+        <p style="font-size:13px;font-weight:500;color:#1a1a1a;margin-bottom:2px;">Miriam Chengeto Cummings</p>
+        <p style="font-size:12px;color:#666;margin-bottom:6px;line-height:1.4;">Registered Manager · MCA Lead</p>
+        <span class="badge" style="background:#EEEDFE;color:#3C3489;">Band 7 RMN</span>
+        <span class="badge" style="background:#EAF3DE;color:#3B6D11;">DSL Qualified</span>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <p><strong>Ignis Care Limited</strong> &nbsp;·&nbsp; CQC registered 24 February 2025</p>
+  <p style="margin-top:8px;">When you are ready, Daniel is on <a href="tel:07494696305" style="color:#6B2737;font-weight:500;">07494 696 305</a></p>
+</footer>
+
+<script>
+function switchTab(e, name) {
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
+  e.target.classList.add('active');
+  document.getElementById('panel-' + name).classList.add('active');
+}
+function toggleFaq(el) {
+  var a = el.nextElementSibling;
+  var c = el.querySelector('.chevron');
+  var open = a.classList.contains('open');
+  document.querySelectorAll('.faq-a').forEach(function(x) { x.classList.remove('open'); });
+  document.querySelectorAll('.chevron').forEach(function(x) { x.classList.remove('open'); });
+  if (!open) { a.classList.add('open'); c.classList.add('open'); }
+}
+</script>
+</body>
+</html>
